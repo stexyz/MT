@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<PRODUCT>
+		<NAME>18x Míče Wilson US OPEN (18x dóza 4 ks)</NAME>
+		<CATEGORIES>
+			<CATEGORY>Tenisové míče</CATEGORY>
+		</CATEGORIES>
+		<STOCK>
+			<MASTER>
+				<CODE>18XT1197</CODE>
+				<PRICELISTS>
+					<PRICELIST>
+						<PRICELIST_NAME>Main pricelist</PRICELIST_NAME>
+						<PURCHASE_PRICE>99</PURCHASE_PRICE>
+						<INCLUDING_VAT>1</INCLUDING_VAT>
+					</PRICELIST>
+				</PRICELISTS>
+			</MASTER>
+		</STOCK>
+	</PRODUCT>
