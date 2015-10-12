@@ -4,29 +4,35 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using mt_web_api.Services;
 
 namespace mt_web_api.Controllers {
-    public class DbImportsController : ApiController {
-        // GET api/values
-        public IEnumerable<string> Get() {
-            return new string[] { "value1", "value2" };
+    public class DbImportsController : ApiController
+    {
+        private readonly DbImporterService _dbImporterService;
+        
+        public DbImportsController()
+        {
+            _dbImporterService = new DbImporterService();
         }
 
-        // GET api/values/5
-        public string Get(int id) {
-            return "value";
+        // GET api/DbImports
+        /// <summary>
+        /// Gets the list of currently running db imports (count should be atmost 1)
+        /// </summary>
+        /// <returns></returns>
+        public string Get() {
+            return _dbImporterService.DbImportRunning()? "Import running" : "Import not running";
         }
 
-        // POST api/values
-        public void Post([FromBody]string value) {
-        }
-
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value) {
-        }
-
-        // DELETE api/values/5
-        public void Delete(int id) {
+        // POST api/DbImports
+        /// <summary>
+        /// If no db import is currently running, cause a new one to run
+        /// </summary>
+        public string Post()
+        {
+            _dbImporterService.ImportDataFromShoppingCardToDb();
+            return "Db Import created.";
         }
     }
 }
