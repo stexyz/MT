@@ -25,6 +25,9 @@ namespace mt_web_api.Controllers
         /// <returns></returns>
         public string Get()
         {
+            System.Diagnostics.Trace.TraceInformation("Information from GET.");
+            System.Diagnostics.Trace.TraceWarning("Warning from GET.");
+            System.Diagnostics.Trace.TraceError("Error from GET");
             return _dbImporterService.DbImportRunning() ? "Import running" : "Import not running";
         }
 
