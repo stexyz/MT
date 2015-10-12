@@ -50,7 +50,9 @@ namespace mt_web_api.Controllers
                 {
                     Thread.CurrentThread.IsBackground = true;
                     /* run your code here */
+                    System.Diagnostics.Trace.TraceInformation("DB Import started.");
                     _dbImporterService.ImportDataFromShoppingCardToDb();
+                    System.Diagnostics.Trace.TraceInformation("DB Import finished.");
                 }).Start();
                 return "Db Import created.";
             } catch (Exception e) {

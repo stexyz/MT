@@ -40,9 +40,7 @@ namespace mt_web_api.Services {
             ImportCsv(csvReaderOrders, OrdersTableName);
 
 
-            StreamReader csvReaderProducts =
-                GetReaderFromUrl(
-                    @"http://www.megatenis.cz/export/products.csv?visibility=-1&patternId=17&hash=26f694754fc716de890834e0c92904972f3c73938bbdb06f901bbd5326eb6abd");
+            StreamReader csvReaderProducts = GetReaderFromUrl(@"http://www.megatenis.cz/export/products.csv?visibility=-1&patternId=17&hash=26f694754fc716de890834e0c92904972f3c73938bbdb06f901bbd5326eb6abd");
             ImportCsv(csvReaderProducts, ProductsTableName);
         }
 
@@ -77,14 +75,13 @@ namespace mt_web_api.Services {
                             line = textReader.ReadLine();
                         } catch (Exception e) {
                             //ExecuteCommand(connection, String.Format("INSERT INTO dbo.Errors (shortDescription, longDescription) VALUES ({0}, {1})", cmd, e));
-                            Console.WriteLine("\n--------------\nExecuting command: \n" + cmd + "\n--------------\n");
-                            Console.WriteLine(e);
+                            System.Diagnostics.Trace.TraceError("\n--------------\nExecuting command: \n" + cmd + "\n--------------\n");
+                            System.Diagnostics.Trace.TraceError(e.Message);
                         }
 
-                        if (id++ % 100 == 0) {
-                            Console.WriteLine("Imported lines: {0}. Last 100 processed in {1}s.", id, (DateTime.Now - time).TotalSeconds);
+                        if (id++ % 500 == 0) {
+                            System.Diagnostics.Trace.TraceInformation("Imported lines: {0}. Last 100 processed in {1}s.", id, (DateTime.Now - time).TotalSeconds);
                             time = DateTime.Now;
-                            //Console.SetCursorPosition(0, Console.CursorTop);
                         }
                     }
                 }
@@ -99,10 +96,12 @@ namespace mt_web_api.Services {
             return sr;
         }
         private static void ExecuteCommand(SqlConnection connection, string commandText) {
-            SqlCommand command = new SqlCommand();
-            command.Connection = connection;
-            command.CommandType = CommandType.Text;
-            command.CommandText = commandText;
+            SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandType = CommandType.Text,
+                    CommandText = commandText
+                };
             command.ExecuteNonQuery();
         }
     }
