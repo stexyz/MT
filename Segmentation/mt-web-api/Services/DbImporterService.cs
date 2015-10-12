@@ -6,15 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 
 namespace mt_web_api.Services {
-    public class DbImporterService
+    public class DbImporterService : SqlService
     {
-        private const string OrdersTableName = "dbo.Orders";
-        private const string ProductsTableName = "dbo.Products";
-        private const string ErrorsTableName = "dbo.Errors";
-
         private bool _dbReportRunning;
 
         public bool DbImportRunning()
@@ -36,12 +33,15 @@ namespace mt_web_api.Services {
 //            ImportCsv(new StreamReader(@"C:\Users\Ste\Downloads\products.csv", Encoding.Default, true), "dbo.Products");
             _dbReportRunning = false;
 
+            new Thread(() => {
             StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788");
             ImportCsv(csvReaderOrders, OrdersTableName);
+            }).Start();
 
-
+            new Thread(() => {
             StreamReader csvReaderProducts = GetReaderFromUrl(@"http://www.megatenis.cz/export/products.csv?visibility=-1&patternId=17&hash=26f694754fc716de890834e0c92904972f3c73938bbdb06f901bbd5326eb6abd");
             ImportCsv(csvReaderProducts, ProductsTableName);
+            }).Start();
         }
 
         private static void ImportCsv(StreamReader textReader, string tableName) {
@@ -94,15 +94,6 @@ namespace mt_web_api.Services {
             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
             StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.Default, true);
             return sr;
-        }
-        private static void ExecuteCommand(SqlConnection connection, string commandText) {
-            SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandType = CommandType.Text,
-                    CommandText = commandText
-                };
-            command.ExecuteNonQuery();
         }
     }
 }

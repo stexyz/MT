@@ -46,16 +46,15 @@ namespace mt_web_api.Controllers
         {
             try
             {
-            new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    /* run your code here */
-                    System.Diagnostics.Trace.TraceInformation("DB Import started.");
-                    _dbImporterService.ImportDataFromShoppingCardToDb();
-                    System.Diagnostics.Trace.TraceInformation("DB Import finished.");
-                }).Start();
+                Thread.CurrentThread.IsBackground = true;
+                /* run your code here */
+                System.Diagnostics.Trace.TraceInformation("DB Import started.");
+                _dbImporterService.ImportDataFromShoppingCardToDb();
+                System.Diagnostics.Trace.TraceInformation("DB Import finished.");
                 return "Db Import created.";
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.Diagnostics.Trace.TraceError("Error: {0}", e.Message);
                 throw;
             }
