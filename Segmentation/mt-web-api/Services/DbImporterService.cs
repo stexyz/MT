@@ -36,6 +36,10 @@ namespace mt_web_api.Services {
 //            ImportCsv(new StreamReader(@"C:\Users\Ste\Downloads\products.csv", Encoding.Default, true), "dbo.Products");
             _dbReportRunning = false;
 
+            StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788");
+            ImportCsv(csvReaderOrders, OrdersTableName);
+
+
             StreamReader csvReaderProducts =
                 GetReaderFromUrl(
                     @"http://www.megatenis.cz/export/products.csv?visibility=-1&patternId=17&hash=26f694754fc716de890834e0c92904972f3c73938bbdb06f901bbd5326eb6abd");
