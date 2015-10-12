@@ -25,10 +25,17 @@ namespace mt_web_api.Controllers
         /// <returns></returns>
         public string Get()
         {
-            System.Diagnostics.Trace.TraceInformation("Information from GET.");
-            System.Diagnostics.Trace.TraceWarning("Warning from GET.");
-            System.Diagnostics.Trace.TraceError("Error from GET");
-            return _dbImporterService.DbImportRunning() ? "Import running" : "Import not running";
+            try
+            {
+                return _dbImporterService.DbImportRunning()
+                           ? "Import running"
+                           : "Import not running";
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Trace.TraceError("Error: {0}", e.Message);
+                throw;
+            }
         }
 
         // POST api/DbImports
@@ -37,13 +44,19 @@ namespace mt_web_api.Controllers
         /// </summary>
         public string Post()
         {
+            try
+            {
             new Thread(() =>
                 {
                     Thread.CurrentThread.IsBackground = true;
                     /* run your code here */
                     _dbImporterService.ImportDataFromShoppingCardToDb();
                 }).Start();
-            return "Db Import created.";
+                return "Db Import created.";
+            } catch (Exception e) {
+                System.Diagnostics.Trace.TraceError("Error: {0}", e.Message);
+                throw;
+            }
         }
     }
 }
