@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -22,21 +20,9 @@ namespace mt_web_api.Services {
             where stock < 900 and manufacturer = 'Wilson' and itemAmount > 0 and purchasePrice > 0 
             group by manufacturer, left(date, 7)";
 
-        public string GetManufacturerByMonth(string manufacturer)
+        public string[] GetManufacturerByMonth(string manufacturer)
         {
-            return "";
-        }
-    }
-
-    public class SqlService
-    {
-        protected static void ExecuteCommand(SqlConnection connection, string commandText) {
-            SqlCommand command = new SqlCommand {
-                Connection = connection,
-                CommandType = CommandType.Text,
-                CommandText = commandText
-            };
-            command.ExecuteNonQuery();
+            return new[] {""};
         }
     }
 }
