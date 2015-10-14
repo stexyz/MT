@@ -33,10 +33,10 @@ namespace mt_web_api.Services {
 //            ImportCsv(new StreamReader(@"C:\Users\Ste\Downloads\products.csv", Encoding.Default, true), "dbo.Products");
             _dbReportRunning = false;
 
-            new Thread(() => {
-            StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788");
-            ImportCsv(csvReaderOrders, OrdersTableName);
-            }).Start();
+            new Thread(() =>{
+                    StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788&dateFrom=2014-1-1&dateUntil=2015-10-15");
+                    ImportCsv(csvReaderOrders, OrdersTableName);
+                }).Start();
 
             new Thread(() => {
             StreamReader csvReaderProducts = GetReaderFromUrl(@"http://www.megatenis.cz/export/products.csv?visibility=-1&patternId=17&hash=26f694754fc716de890834e0c92904972f3c73938bbdb06f901bbd5326eb6abd");
@@ -52,8 +52,10 @@ namespace mt_web_api.Services {
                 string[] columns = line.Split(";".ToCharArray()).Select(c => c.Replace("\"", string.Empty)).ToArray();
                 string columsString = string.Join(",", columns.Take(columns.Length - 1));
                 using (SqlConnection connection = new SqlConnection(SqlConnectionString)) {
+                    System.Diagnostics.Trace.TraceInformation("DB connection open.");
                     connection.Open();
-                    ExecuteCommand(connection, "DELETE FROM " + tableName);
+                    ExecuteCommand(connection, "TRUNCATE TABLE " + tableName);
+                    System.Diagnostics.Trace.TraceInformation("DB deletion on table" + tableName +" finished.");
                     string cmd = "";
                     line = textReader.ReadLine();
                     while (line != null) {
@@ -82,6 +84,10 @@ namespace mt_web_api.Services {
                         if (id++ % 500 == 0) {
                             System.Diagnostics.Trace.TraceInformation("Imported lines: {0}. Last 100 processed in {1}s.", id, (DateTime.Now - time).TotalSeconds);
                             time = DateTime.Now;
+                        }
+                        if (id == 500)
+                        {
+                            return;
                         }
                     }
                 }
