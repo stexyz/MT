@@ -79,6 +79,7 @@ namespace mt_web_api.Services {
                             //ExecuteCommand(connection, String.Format("INSERT INTO dbo.Errors (shortDescription, longDescription) VALUES ({0}, {1})", cmd, e));
                             System.Diagnostics.Trace.TraceError("\n--------------\nExecuting command: \n" + cmd + "\n--------------\n");
                             System.Diagnostics.Trace.TraceError(e.Message);
+                            return; //without this return the last line would be added indefinitelly
                         }
 
                         if (id++ % 500 == 0) {
