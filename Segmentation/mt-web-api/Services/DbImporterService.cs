@@ -34,7 +34,7 @@ namespace mt_web_api.Services {
             _dbReportRunning = false;
 
             new Thread(() =>{
-                    StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788&dateFrom=2014-1-1&dateUntil=2015-10-15");
+                    StreamReader csvReaderOrders = GetReaderFromUrl(@"http://www.megatenis.cz/export/orders.csv?patternId=16&hash=aafffe4d6e988b999d0061e455a2912d93bf63f4ad2a5ecacc960ed4576af788");
                     ImportCsv(csvReaderOrders, OrdersTableName);
                 }).Start();
 
@@ -84,10 +84,6 @@ namespace mt_web_api.Services {
                         if (id++ % 500 == 0) {
                             System.Diagnostics.Trace.TraceInformation("Imported lines: {0}. Last 100 processed in {1}s.", id, (DateTime.Now - time).TotalSeconds);
                             time = DateTime.Now;
-                        }
-                        if (id == 500)
-                        {
-                            return;
                         }
                     }
                 }
